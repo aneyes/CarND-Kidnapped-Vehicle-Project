@@ -36,10 +36,10 @@ class ParticleFilter {
 	bool is_initialized;
 	
 	// Vector of weights of all particles
-	std::vector<double> weights;
 	
 public:
 	
+	std::vector<double> weights;
 	// Set of current particles
 	std::vector<Particle> particles;
 
@@ -79,8 +79,17 @@ public:
 	 * @param observations Vector of landmark observations
 	 */
 	void dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations);
-	
-	/**
+    
+    std::vector<LandmarkObs> observationtoMap(std::vector<LandmarkObs> &observation,double x, double y,
+            double theta);
+
+    void landmarkinrange(std::vector<LandmarkObs> &predictes, double sansor_range,
+        const Map &map_landmarks, Particle particle);
+
+    double CalculateParticleWeight(double sensor_range, std::vector<LandmarkObs> observations, Map map_landmarks, double sigma_x_2sq, double sigma_y_2sq, double outer_term, Particle& particle);
+
+
+    /**
 	 * updateWeights Updates the weights for each particle based on the likelihood of the 
 	 *   observed measurements. 
 	 * @param sensor_range Range [m] of sensor
@@ -88,7 +97,7 @@ public:
 	 * @param observations Vector of landmark observations
 	 * @param map Map class containing map landmarks
 	 */
-	void updateWeights(double sensor_range, double std_landmark[], const std::vector<LandmarkObs> &observations,
+	void updateWeights(double sensor_range, double std_landmark[], std::vector<LandmarkObs> &observations,
 			const Map &map_landmarks);
 	
 	/**
@@ -110,6 +119,7 @@ public:
 	/**
 	 * initialized Returns whether particle filter is initialized yet or not.
 	 */
+    
 	const bool initialized() const {
 		return is_initialized;
 	}
